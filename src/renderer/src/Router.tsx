@@ -6,6 +6,7 @@ import {
   createHashRouter,
   createRoutesFromElements,
 } from 'react-router-dom';
+import { BANKS_ROUTE, OVERVIEW_ROUTE, TRANSACTIONS_ROUTE } from '../../shared/consts';
 import Banks from './pages/banks/Banks';
 import MainLayout from './pages/mainlayout/MainLayout';
 import Overview from './pages/overview/Overview';
@@ -15,10 +16,10 @@ const App: React.FC = () => {
   const router = createHashRouter(
     createRoutesFromElements(
       <Route path="/" element={<MainLayout />}>
-        <Route index element={<Navigate to="/overview" />} />
-        <Route path="/overview" element={<Overview />} />
-        <Route path="/banks" element={<Banks />} />
-        <Route path="/transactions" element={<Transactions />} />
+        <Route index element={<Navigate to={OVERVIEW_ROUTE} />} />
+        <Route path={OVERVIEW_ROUTE} element={<Overview />} />
+        <Route path={BANKS_ROUTE} element={<Banks />} />
+        <Route path={TRANSACTIONS_ROUTE} element={<Transactions />} />
       </Route>,
     ),
   );
