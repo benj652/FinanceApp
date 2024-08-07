@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Electron</title>
+    <title>Slump Finance</title>
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' 'unsafe-eval'"
+      content="default-src 'self' https://cdn.plaid.com/; connect-src 'self' https://sandbox.plaid.com/link/token/create; script-src 'self' https://cdn.plaid.com/link/v2/stable/link-initialize.js; frame-src https://cdn.plaid.com/;  style-src 'self' 'unsafe-inline' 'unsafe-eval'"
     />
   </head>
 

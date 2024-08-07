@@ -1,11 +1,12 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
-import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, session, shell } from 'electron';
 import { join } from 'path';
 import icon from '../../resources/icon.png?asset';
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    title: 'Slump Finance',
     width: 1200,
     height: 800,
     show: false,
@@ -53,6 +54,26 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'));
 
+  const filter = {
+    urls: ['*://sandbox.plaid.com/*'],
+  };
+  session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+    console.log('--------------------------------------------------------');
+    details.requestHeaders['Origin'] = 'https://sandbox.plaid.com/link/token/create';
+    console.log('Request details:', details.requestHeaders['Origin']);
+    callback({ requestHeaders: details.requestHeaders });
+  });
+
+  session.defaultSession.webRequest.onHeadersReceived(filter, (details, callback) => {
+    console.log('--------------------------------------------------------');
+    if (details.responseHeaders) {
+      details.responseHeaders['Access-Control-Allow-Origin'] = [
+        'https://sandbox.plaid.com/link/token/create',
+      ];
+    }
+    console.log('Request details:', details.responseHeaders);
+    callback({ responseHeaders: details.responseHeaders });
+  });
   createWindow();
 
   app.on('activate', function () {
