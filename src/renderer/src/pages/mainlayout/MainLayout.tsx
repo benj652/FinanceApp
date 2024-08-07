@@ -16,7 +16,7 @@ const MainLayout: React.FC = () => {
   return (
     <div className="flex">
       <SideBar
-        className={`transition-all duration-100 ease-in-out ${isExpanded ? 'w-[325px]' : 'w-[100px]'} text-black border-1 border-gray-400/50`}
+        className={`transition-all duration-180 ease-in-out ${isExpanded ? 'w-[325px]' : 'w-[100px] '} text-black border-1 border-gray-400/50`}
       >
         <div className="flex flex-col items-center space-y-8">
           <div className="flex flex-row justify-between space-x-1">

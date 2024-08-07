@@ -1,23 +1,15 @@
-import { contextBridge } from 'electron'
-import { electronAPI } from '@electron-toolkit/preload'
+import { contextBridge, ipcRenderer } from 'electron';
 
-if(!process.contextIsolated) {
-  throw new Error('Preload script must be run in a context that is isolated')
+if (!process.contextIsolated) {
+  throw new Error('Preload script must be run in a context that is isolated');
 }
 
-
-// Use `contextBridge` APIs to expose Electron APIs to
-// renderer only if context isolation is enabled, otherwise
-// just add to the DOM global.
-if (process.contextIsolated) {
-  try {
-    contextBridge.exposeInMainWorld('electron', electronAPI)
-  } catch (error) {
-    console.error(error)
-  }
-} else {
-  // @ts-ignore (define in dts)
-  window.electron = electronAPI
-  // @ts-ignore (define in dts)
-  window.api = api
+try {
+  contextBridge.exposeInMainWorld('context', {
+    locale: 'en-US',
+    createLinkToken: (...args) => ipcRenderer.invoke('createLinkToken', ...args),
+    setAccessToken: (...args) => ipcRenderer.invoke('setAccessToken', ...args),
+  });
+} catch (error) {
+  console.error(error);
 }

@@ -1,9 +1,17 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
-import { app, BrowserWindow, ipcMain, session, shell } from 'electron';
+import { config } from 'dotenv';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { join } from 'path';
 import icon from '../../resources/icon.png?asset';
+import { getAccessToken } from './lib/getAccessToken';
+import { createLinkToken } from './lib/linkToken';
+
+config();
+
+let ACCESS_TOKEN: any;
 
 function createWindow(): void {
+  ACCESS_TOKEN;
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     title: 'Slump Finance',
@@ -14,8 +22,9 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false,
+      sandbox: true,
       contextIsolation: true,
+      webSecurity: true,
     },
   });
 
@@ -52,28 +61,30 @@ app.whenReady().then(() => {
   });
 
   // IPC test
-  ipcMain.on('ping', () => console.log('pong'));
-
-  const filter = {
-    urls: ['*://sandbox.plaid.com/*'],
-  };
-  session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-    console.log('--------------------------------------------------------');
-    details.requestHeaders['Origin'] = 'https://sandbox.plaid.com/link/token/create';
-    console.log('Request details:', details.requestHeaders['Origin']);
-    callback({ requestHeaders: details.requestHeaders });
+  ipcMain.handle('createLinkToken', () => createLinkToken());
+  ipcMain.handle('setAccessToken', (_, accessToken: string) => {
+    ACCESS_TOKEN = getAccessToken(accessToken);
   });
+  // const filter = {
+  //   urls: ['*://sandbox.plaid.com/*'],
+  // };
+  // session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+  //   console.log('--------------------------------------------------------');
+  //   details.requestHeaders['Origin'] = 'https://sandbox.plaid.com/link/token/create';
+  //   console.log('Request details:', details.requestHeaders['Origin']);
+  //   callback({ requestHeaders: details.requestHeaders });
+  // });
 
-  session.defaultSession.webRequest.onHeadersReceived(filter, (details, callback) => {
-    console.log('--------------------------------------------------------');
-    if (details.responseHeaders) {
-      details.responseHeaders['Access-Control-Allow-Origin'] = [
-        'https://sandbox.plaid.com/link/token/create',
-      ];
-    }
-    console.log('Request details:', details.responseHeaders);
-    callback({ responseHeaders: details.responseHeaders });
-  });
+  // session.defaultSession.webRequest.onHeadersReceived(filter, (details, callback) => {
+  //   console.log('--------------------------------------------------------');
+  //   if (details.responseHeaders) {
+  //     details.responseHeaders['Access-Control-Allow-Origin'] = [
+  //       'https://sandbox.plaid.com/link/token/create',
+  //     ];
+  //   }
+  //   console.log('Request details:', details.responseHeaders);
+  //   callback({ responseHeaders: details.responseHeaders });
+  // });
   createWindow();
 
   app.on('activate', function () {
