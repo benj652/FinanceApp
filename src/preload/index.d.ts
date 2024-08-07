@@ -4,6 +4,7 @@ declare global {
       locale: string;
       createLinkToken: (...args: any) => any;
       setAccessToken: (...args: any) => any;
+      getUserData: (...args: any) => any;
     };
   }
 }

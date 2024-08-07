@@ -4,11 +4,13 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { join } from 'path';
 import icon from '../../resources/icon.png?asset';
 import { getAccessToken } from './lib/getAccessToken';
+import getUserData from './lib/getUserData';
 import { createLinkToken } from './lib/linkToken';
+import { checkAccessTokenStorage } from './lib/manageTokenStorage';
 
 config();
 
-let ACCESS_TOKEN: any;
+let ACCESS_TOKEN: any = checkAccessTokenStorage();
 
 function createWindow(): void {
   ACCESS_TOKEN;
@@ -65,6 +67,7 @@ app.whenReady().then(() => {
   ipcMain.handle('setAccessToken', (_, accessToken: string) => {
     ACCESS_TOKEN = getAccessToken(accessToken);
   });
+  ipcMain.handle('getUserData', () => getUserData(ACCESS_TOKEN));
   // const filter = {
   //   urls: ['*://sandbox.plaid.com/*'],
   // };

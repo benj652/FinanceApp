@@ -9,6 +9,7 @@ try {
     locale: 'en-US',
     createLinkToken: (...args) => ipcRenderer.invoke('createLinkToken', ...args),
     setAccessToken: (...args) => ipcRenderer.invoke('setAccessToken', ...args),
+    getUserData: (...args) => ipcRenderer.invoke('getUserData', ...args),
   });
 } catch (error) {
   console.error(error);
