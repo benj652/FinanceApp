@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { join } from 'path';
 import icon from '../../resources/icon.png?asset';
+import getAccountBalances from './lib/accountBalanceManagement';
 import { getAccessToken } from './lib/getAccessToken';
 import getUserData from './lib/getUserData';
 import { createLinkToken } from './lib/linkToken';
@@ -68,6 +69,7 @@ app.whenReady().then(() => {
     ACCESS_TOKEN = getAccessToken(accessToken);
   });
   ipcMain.handle('getUserData', () => getUserData(ACCESS_TOKEN));
+  ipcMain.handle('getAccountBalances', () => getAccountBalances(ACCESS_TOKEN));
   // const filter = {
   //   urls: ['*://sandbox.plaid.com/*'],
   // };

@@ -52,7 +52,7 @@ const MainLayout: React.FC = () => {
           </SideBarButton>
         </div>
       </SideBar>
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto space-y-10">
         <Header selected={selected} />
         <Outlet />
       </div>

@@ -10,6 +10,7 @@ try {
     createLinkToken: (...args) => ipcRenderer.invoke('createLinkToken', ...args),
     setAccessToken: (...args) => ipcRenderer.invoke('setAccessToken', ...args),
     getUserData: (...args) => ipcRenderer.invoke('getUserData', ...args),
+    getAccountBalances: (...args) => ipcRenderer.invoke('getAccountBalances', ...args),
   });
 } catch (error) {
   console.error(error);

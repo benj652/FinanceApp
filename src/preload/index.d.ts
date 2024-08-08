@@ -5,6 +5,7 @@ declare global {
       createLinkToken: (...args: any) => any;
       setAccessToken: (...args: any) => any;
       getUserData: (...args: any) => any;
+      getAccountBalances: (...args: any) => any;
     };
   }
 }
