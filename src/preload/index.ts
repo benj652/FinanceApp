@@ -11,6 +11,8 @@ try {
     setAccessToken: (...args) => ipcRenderer.invoke('setAccessToken', ...args),
     getUserData: (...args) => ipcRenderer.invoke('getUserData', ...args),
     getAccountBalances: (...args) => ipcRenderer.invoke('getAccountBalances', ...args),
+    checkReportsStorage: (...args) => ipcRenderer.invoke('checkReportsStorage', ...args),
+    checkAccountsStorage: (...args) => ipcRenderer.invoke('checkAccountsStorage', ...args),
   });
 } catch (error) {
   console.error(error);

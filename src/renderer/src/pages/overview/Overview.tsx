@@ -1,4 +1,4 @@
-import Card from '@renderer/components/Card';
+import Card from '@renderer/components/general/Card';
 import React from 'react';
 
 const Overview: React.FC = () => {

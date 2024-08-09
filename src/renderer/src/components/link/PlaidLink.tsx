@@ -3,6 +3,7 @@
 // obtain a link token to be used in the Link component
 import React, { useEffect, useState } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
+import GeneralButton from '../general/GeneralButton';
 const PlaidLink = () => {
   const [linkToken, setLinkToken] = useState(null);
   const generateToken = async () => {
@@ -35,9 +36,9 @@ const Link: React.FC<LinkProps> = (props: LinkProps) => {
   };
   const { open, ready } = usePlaidLink(config);
   return (
-    <button onClick={() => open()} disabled={!ready}>
-      Link account
-    </button>
+    <GeneralButton onClick={() => open()} disabled={!ready}>
+      Link Accounts
+    </GeneralButton>
   );
 };
 export default PlaidLink;

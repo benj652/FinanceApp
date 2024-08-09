@@ -1,5 +1,6 @@
 import { client } from '../../shared/plaidConfigs';
 import Stringify from '../utils/stringify';
+import { updateReports } from './manageBankingStorage';
 import { checkReportTokenStorage, writeReportTokenStorage } from './manageTokenStorage';
 
 const getUserData = async (accessToken) => {
@@ -35,13 +36,14 @@ const getUserData = async (accessToken) => {
       accountsResponse = await client.assetReportCreate(request);
       writeReportTokenStorage(accountsResponse.data);
     }
-    const assetReportToken = accountsResponse.asset_report_token;
+    const assetReportToken: string = accountsResponse.asset_report_token;
     const reportRequest = {
       asset_report_token: assetReportToken,
       include_insights: true,
     };
     const data = await client.assetReportGet(reportRequest);
     console.log(data.data);
+    updateReports(data.data);
     accountsResponse = null;
     return Stringify(data.data);
   } catch (e) {

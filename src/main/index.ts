@@ -7,6 +7,7 @@ import getAccountBalances from './lib/accountBalanceManagement';
 import { getAccessToken } from './lib/getAccessToken';
 import getUserData from './lib/getUserData';
 import { createLinkToken } from './lib/linkToken';
+import { checkAccountsStorage, checkReportsStorage } from './lib/manageBankingStorage';
 import { checkAccessTokenStorage } from './lib/manageTokenStorage';
 
 config();
@@ -70,6 +71,8 @@ app.whenReady().then(() => {
   });
   ipcMain.handle('getUserData', () => getUserData(ACCESS_TOKEN));
   ipcMain.handle('getAccountBalances', () => getAccountBalances(ACCESS_TOKEN));
+  ipcMain.handle('checkReportsStorage', () => checkReportsStorage());
+  ipcMain.handle('checkAccountsStorage', () => checkAccountsStorage());
   // const filter = {
   //   urls: ['*://sandbox.plaid.com/*'],
   // };

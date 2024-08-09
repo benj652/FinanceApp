@@ -6,6 +6,8 @@ declare global {
       setAccessToken: (...args: any) => any;
       getUserData: (...args: any) => any;
       getAccountBalances: (...args: any) => any;
+      checkReportsStorage: (...args: any) => any;
+      checkAccountsStorage: (...args: any) => any;
     };
   }
 }
