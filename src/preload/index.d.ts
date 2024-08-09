@@ -8,6 +8,8 @@ declare global {
       getAccountBalances: (...args: any) => any;
       checkReportsStorage: (...args: any) => any;
       checkAccountsStorage: (...args: any) => any;
+      manageTransactions: (...args: any) => any;
+      checkTransactionsFile: (...args: any) => any;
     };
   }
 }

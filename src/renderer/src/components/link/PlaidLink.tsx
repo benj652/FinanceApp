@@ -8,7 +8,7 @@ const PlaidLink = () => {
   const [linkToken, setLinkToken] = useState(null);
   const generateToken = async () => {
     const response = await window.context.createLinkToken();
-    console.log('response', response);
+    // console.log('response', response);
     const data = await response;
     setLinkToken(data.link_token);
   };
@@ -28,7 +28,7 @@ const Link: React.FC<LinkProps> = (props: LinkProps) => {
     // send public_token to server
     const response = window.context.setAccessToken(public_token);
     // Handle response ...
-    console.log(response);
+    // console.log(response);
   }, []);
   const config: Parameters<typeof usePlaidLink>[0] = {
     token: props.linkToken!,

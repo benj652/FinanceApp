@@ -13,6 +13,8 @@ try {
     getAccountBalances: (...args) => ipcRenderer.invoke('getAccountBalances', ...args),
     checkReportsStorage: (...args) => ipcRenderer.invoke('checkReportsStorage', ...args),
     checkAccountsStorage: (...args) => ipcRenderer.invoke('checkAccountsStorage', ...args),
+    manageTransactions: (...args) => ipcRenderer.invoke('manageTransactions', ...args),
+    checkTransactionsFile: (...args) => ipcRenderer.invoke('checkTransactionsFile', ...args),
   });
 } catch (error) {
   console.error(error);
