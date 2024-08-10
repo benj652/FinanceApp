@@ -5,3 +5,5 @@ export type SideBarLinkProps = LinkProps & {
   isExpanded: boolean;
   isSelected: boolean;
 };
+
+export type CatigoryDataType = Array<{ name: string; value: number }>;

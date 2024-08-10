@@ -46,7 +46,11 @@ const AccountStats = ({
           </tr>
         </tbody>
       </table>
-      <h1 className="text-xl">Last 30 Days {change && `(${change?.toFixed(2)}%)`}</h1>
+      <h1
+        className={`text-xl ${change === null ? 'text-black' : change < 0 ? 'text-red-500' : 'text-green-500'}`}
+      >
+        Last 30 Days: {change ? `(${change?.toFixed(2)}%)` : '(N/A)'}
+      </h1>
       <ResponsiveContainer width="100%" height={200}>
         <LineChart
           width={200}

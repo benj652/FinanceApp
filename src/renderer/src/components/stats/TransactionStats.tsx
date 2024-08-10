@@ -1,11 +1,12 @@
+import { categoryParser } from '@renderer/utils/NameParsers';
 import { useState } from 'react';
 import { MdOutlineExpandMore } from 'react-icons/md';
-import Card from './general/Card';
+import Card from '../general/Card';
 const TransactionStats = ({ transaction }) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   return (
     <Card
-      className="w-full lg:w-[800px] flex flex-col cursor-pointer"
+      className={'w-full lg:w-[800px] flex flex-col cursor-pointer'}
       onClick={() => setExpanded(!expanded)}
     >
       <div className="flex justify-end">
@@ -22,7 +23,10 @@ const TransactionStats = ({ transaction }) => {
             </div>
             <div>
               <p className="font-bold">Amount: </p>
-              <p>{transaction.amount < 0 ? transaction.amount * -1 : transaction.amount}</p>
+              <p className={transaction.amount > 0 ? 'text-red-500' : 'text-green-500'}>
+                {transaction.amount < 0 ? '+' : '-'}$
+                {transaction.amount < 0 ? transaction.amount * -1 : transaction.amount}
+              </p>
             </div>
             <div>
               <p className="font-bold">Date: </p>
@@ -42,7 +46,7 @@ const TransactionStats = ({ transaction }) => {
             </div>
             <div>
               <p className="font-bold">Category: </p>
-              <p>{transaction.personal_finance_category?.primary}</p>
+              <p>{categoryParser(transaction.personal_finance_category?.primary)}</p>
             </div>
             <div>
               <p className="font-bold">Website: </p>
@@ -57,7 +61,10 @@ const TransactionStats = ({ transaction }) => {
             </div>
             <div>
               <span className="font-bold">Amount: </span>
-              {transaction.amount < 0 ? transaction.amount * -1 : transaction.amount}
+              <span className={transaction.amount > 0 ? 'text-red-500' : 'text-green-500'}>
+                {transaction.amount < 0 ? '+' : '-'}$
+                {transaction.amount < 0 ? transaction.amount * -1 : transaction.amount}
+              </span>
             </div>
             <div>
               <span className="font-bold">Date: </span>

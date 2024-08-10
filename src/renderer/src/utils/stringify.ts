@@ -1,4 +1,4 @@
-const Stringify = (value: any) => {
+const Stringify = (value: string) => {
   return JSON.parse(JSON.stringify(value));
 };
 

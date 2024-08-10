@@ -1,5 +1,5 @@
 import { CiBank } from 'react-icons/ci';
-import Card from './general/Card';
+import Card from '../general/Card';
 
 const BankStats = (bank) => {
   const bankAccount = bank.bank;

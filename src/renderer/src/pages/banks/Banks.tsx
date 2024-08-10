@@ -1,5 +1,5 @@
-import BankStats from '@renderer/components/BankStats';
 import PlaidLink from '@renderer/components/link/PlaidLink';
+import BankStats from '@renderer/components/stats/BankStats';
 import { useDataContext } from '@renderer/context/DataContext';
 import React from 'react';
 
