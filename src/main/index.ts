@@ -13,7 +13,7 @@ import { checkTransactionsFile, manageTransactions } from './lib/transactionsMan
 
 config();
 
-let ACCESS_TOKEN: any = checkAccessTokenStorage();
+let ACCESS_TOKEN: string | Promise<string> = checkAccessTokenStorage();
 
 function createWindow(): void {
   ACCESS_TOKEN;

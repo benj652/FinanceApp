@@ -1,7 +1,13 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { AccountBase, RemovedTransaction, Transaction, TransactionsSyncRequest } from 'plaid';
+import {
+  AccountBase,
+  RemovedTransaction,
+  Transaction,
+  TransactionBase,
+  TransactionsSyncRequest,
+} from 'plaid';
 import { client } from '../../shared/plaidConfigs';
 
 const DEST = path.join(os.homedir(), 'SlumpFinance');
@@ -20,22 +26,25 @@ const checkCursorStorage = () => {
   return data.cursor;
 };
 
-const writeCursorStorage = (cursor) => {
+const writeCursorStorage = (cursor: string) => {
   fs.writeFileSync(CURSOR_FILE, JSON.stringify({ cursor }));
 };
 
 const checkTransactionsFile = () => {
   if (!fs.existsSync(TRANSACTIONS_FILE)) {
-    return null;
+    return undefined;
   } else {
-    const fileContent = JSON.parse(fs.readFileSync(TRANSACTIONS_FILE, 'utf-8'));
+    const fileContent: {
+      accounts: Array<AccountBase>;
+      transactions: Array<TransactionBase>;
+    } = JSON.parse(fs.readFileSync(TRANSACTIONS_FILE, 'utf-8'));
     return fileContent;
   }
 };
 
-const updateTransactions = async (accessToken, cursor) => {
+const updateTransactions = async (accessToken: string | Promise<string>, cursor?: string) => {
   // let cursor = database.getLatestCursorOrNull(itemId);
-
+  const token = await accessToken;
   // New transaction updates since "cursor"
   let accounts: Array<AccountBase> = [];
   let added: Array<Transaction> = [];
@@ -46,7 +55,7 @@ const updateTransactions = async (accessToken, cursor) => {
   // Iterate through each page of new transaction updates for item
   while (hasMore) {
     const request: TransactionsSyncRequest = {
-      access_token: accessToken,
+      access_token: token,
       cursor: cursor,
     };
     const response = await client.transactionsSync(request);
@@ -72,7 +81,7 @@ const updateTransactions = async (accessToken, cursor) => {
       accounts: existingData.accounts,
       transactions: [...existingData.transactions, ...added],
     };
-    if (existingData?.modified) {
+    if (modified) {
       for (let i = 0; i < modified.length; i++) {
         const index = existingData.transactions.findIndex(
           (transaction) => transaction.transaction_id === modified[i].transaction_id,
@@ -104,7 +113,7 @@ const updateTransactions = async (accessToken, cursor) => {
   }
 };
 
-const manageTransactions = async (accessToken) => {
+const manageTransactions = async (accessToken: string | Promise<string>) => {
   console.log('accessToken', accessToken);
   const cursor = checkCursorStorage();
   await updateTransactions(accessToken, cursor);

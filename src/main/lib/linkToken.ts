@@ -1,4 +1,4 @@
-import { CountryCode, LinkTokenCreateRequest, Products } from 'plaid';
+import { CountryCode, LinkTokenCreateRequest, LinkTokenCreateResponse, Products } from 'plaid';
 import { client } from '../../shared/plaidConfigs';
 import { checkTokenStorage, writeTokenStorage } from './manageTokenStorage';
 
@@ -6,7 +6,7 @@ export const createLinkToken = async () => {
   try {
     // create link token
     console.log('checking link token');
-    const prevToken = await checkTokenStorage();
+    const prevToken: LinkTokenCreateResponse = await checkTokenStorage();
     if (prevToken) {
       console.log('found link token', prevToken);
       return prevToken;
@@ -22,10 +22,12 @@ export const createLinkToken = async () => {
       country_codes: process.env.PLAID_COUNTRY_CODES?.split(',') as CountryCode[],
       language: 'en',
     };
-    const createTokenResponse = await client.linkTokenCreate(configs);
+    const createTokenResponse: { data: LinkTokenCreateResponse } =
+      await client.linkTokenCreate(configs);
     writeTokenStorage(JSON.parse(JSON.stringify(createTokenResponse.data)));
-    return JSON.parse(JSON.stringify(createTokenResponse.data));
+    return JSON.parse(JSON.stringify(createTokenResponse.data)) as LinkTokenCreateResponse;
   } catch (e) {
     console.log('error creating link token', e);
+    return null;
   }
 };

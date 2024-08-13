@@ -5,6 +5,7 @@ import { useDataContext } from '@renderer/context/DataContext';
 import useCheckAssets from '@renderer/hooks/useCheckAssets';
 import useCheckBalances from '@renderer/hooks/useCheckBalances';
 import useCheckTransactions from '@renderer/hooks/useCheckTransactions';
+import { AccountsGetResponse, AssetReportGetResponse } from 'plaid';
 import icon from '../../assets/icon.png';
 const Home = () => {
   const { setAssets, setBalances, setTransactions } = useDataContext();
@@ -13,15 +14,14 @@ const Home = () => {
   useCheckTransactions();
   const getTransactions = async () => {
     try {
-      const data = await window.context.manageTransactions();
-      setTransactions(data);
+      await window.context.manageTransactions();
     } catch (e) {
       console.log(e);
     }
   };
   const getBalances = async () => {
     try {
-      const data = await window.context.getAccountBalances();
+      const data: { accounts: AccountsGetResponse } = await window.context.getAccountBalances();
       setBalances(data);
     } catch (e) {
       console.log(e);
@@ -30,7 +30,7 @@ const Home = () => {
 
   const getData = async () => {
     try {
-      const data = await window.context.getUserData();
+      const data: AssetReportGetResponse | undefined = await window.context.getUserData();
       setAssets(data);
     } catch (e) {
       console.log(e);

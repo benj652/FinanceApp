@@ -1,9 +1,10 @@
+import { AssetReportGetResponse } from 'plaid';
 import { client } from '../../shared/plaidConfigs';
 import Stringify from '../utils/stringify';
 import { updateReports } from './manageBankingStorage';
 import { checkReportTokenStorage, writeReportTokenStorage } from './manageTokenStorage';
 
-const getUserData = async (accessToken) => {
+const getUserData = async (accessToken: string | Promise<string>) => {
   try {
     const token = await accessToken;
     console.log(token);
@@ -45,9 +46,10 @@ const getUserData = async (accessToken) => {
     console.log(data.data);
     updateReports(data.data);
     accountsResponse = null;
-    return Stringify(data.data);
+    return Stringify(data.data) as AssetReportGetResponse;
   } catch (e) {
-    return Stringify(e);
+    console.log(e);
+    return null;
   }
 };
 

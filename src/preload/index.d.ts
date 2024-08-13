@@ -2,14 +2,19 @@ declare global {
   interface Window {
     context: {
       locale: string;
-      createLinkToken: (...args: any) => any;
-      setAccessToken: (...args: any) => any;
-      getUserData: (...args: any) => any;
-      getAccountBalances: (...args: any) => any;
-      checkReportsStorage: (...args: any) => any;
-      checkAccountsStorage: (...args: any) => any;
-      manageTransactions: (...args: any) => any;
-      checkTransactionsFile: (...args: any) => any;
+      createLinkToken: () => Promise<LinkTokenCreateResponse | undefined>;
+      setAccessToken: (public_token: string) => Promise<string>;
+      getUserData: (...args: unknown) => Promise<AssetReportGetResponse | null>;
+      getAccountBalances: (...args: unknown) => Promise<AccountsGetResponse | null>;
+      checkReportsStorage: (...args: unknown) => AssetReportGetResponse | null;
+      checkAccountsStorage: (...args: unknown) => AccountsGetResponse | null;
+      manageTransactions: (...args: unknown) => Promise<void>;
+      checkTransactionsFile: (...args: unknown) =>
+        | {
+            accounts: Array<AccountBase>;
+            transactions: Array<TransactionBase>;
+          }
+        | undefined;
     };
   }
 }

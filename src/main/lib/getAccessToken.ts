@@ -1,7 +1,7 @@
 import { client } from '../../shared/plaidConfigs';
 import { writeAccessTokenStorage } from './manageTokenStorage';
 
-export const getAccessToken = async (public_token) => {
+export const getAccessToken = async (public_token: string) => {
   const tokenResponse = await client.itemPublicTokenExchange({
     public_token: public_token,
   });

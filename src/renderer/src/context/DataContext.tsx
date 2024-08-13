@@ -1,22 +1,35 @@
+import { AccountBase, AccountsGetResponse, AssetReportGetResponse, Transaction } from 'plaid';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
 // Define the types for your context state
-interface DataContextType<TAsset, TBalance, TTransaction> {
-  assets: TAsset | null;
-  setAssets: (data: TAsset | null) => void;
-  balances: TBalance | null;
-  setBalances: (data: TBalance | null) => void;
-  transactions: TTransaction | null;
-  setTransactions: (data: TTransaction | null) => void;
+interface DataContextType {
+  assets: AssetReportGetResponse | undefined;
+  setAssets: (data: AssetReportGetResponse | undefined) => void;
+  balances: { accounts: AccountsGetResponse } | undefined;
+  setBalances: (data: { accounts: AccountsGetResponse } | undefined) => void;
+  transactions:
+    | {
+        accounts: AccountBase[];
+        transactions: Transaction[];
+      }
+    | undefined;
+  setTransactions: (
+    data:
+      | {
+          accounts: AccountBase[];
+          transactions: Transaction[];
+        }
+      | undefined,
+  ) => void;
 }
 
 // Create the context with default values as undefined
-export const DataContext = createContext<DataContextType<unknown, unknown, unknown>>({
-  assets: null,
+export const DataContext = createContext<DataContextType>({
+  assets: undefined,
   setAssets: () => {},
-  balances: null,
+  balances: undefined,
   setBalances: () => {},
-  transactions: null,
+  transactions: undefined,
   setTransactions: () => {},
 });
 
@@ -27,9 +40,15 @@ export const useDataContext = () => {
 
 // Provider component
 export const DataContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [assets, setAssets] = useState<unknown | null>(null);
-  const [balances, setBalances] = useState<unknown | null>(null);
-  const [transactions, setTransactions] = useState<unknown | null>(null);
+  const [assets, setAssets] = useState<AssetReportGetResponse | undefined>();
+  const [balances, setBalances] = useState<{ accounts: AccountsGetResponse } | undefined>();
+  const [transactions, setTransactions] = useState<
+    | {
+        accounts: AccountBase[];
+        transactions: Transaction[];
+      }
+    | undefined
+  >();
 
   return (
     <DataContext.Provider

@@ -1,13 +1,14 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { AccountsGetResponse, AssetReportGetResponse } from 'plaid';
 import { FOLDER } from '../../shared/consts';
 
 const DEST = path.join(os.homedir(), FOLDER);
 const REPORTS_FILE = path.join(DEST, 'reports.json');
 const ACCOUNTS_FILE = path.join(DEST, 'accounts.json');
 
-export const updateReports = (reports) => {
+export const updateReports = (reports: AssetReportGetResponse) => {
   const now = new Date();
   const data = {
     date: now,
@@ -16,7 +17,7 @@ export const updateReports = (reports) => {
   fs.writeFileSync(REPORTS_FILE, JSON.stringify(data));
 };
 
-export const updateAccounts = (accounts) => {
+export const updateAccounts = (accounts: AccountsGetResponse) => {
   const now = new Date();
   const data = {
     date: now,
@@ -30,7 +31,7 @@ export const checkReportsStorage = () => {
     return null;
   }
   const data = JSON.parse(fs.readFileSync(REPORTS_FILE, 'utf-8'));
-  return data;
+  return data.reports as AssetReportGetResponse;
 };
 
 export const checkAccountsStorage = () => {
@@ -38,5 +39,5 @@ export const checkAccountsStorage = () => {
     return null;
   }
   const data = JSON.parse(fs.readFileSync(ACCOUNTS_FILE, 'utf-8'));
-  return data;
+  return data as AccountsGetResponse;
 };

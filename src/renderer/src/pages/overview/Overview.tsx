@@ -2,7 +2,7 @@ import Card from '@renderer/components/general/Card';
 import GeneralPieChart from '@renderer/components/general/GeneralPieChart';
 import AccountStats from '@renderer/components/stats/AccountStats';
 import { useDataContext } from '@renderer/context/DataContext';
-import { AccountBase } from 'plaid';
+import { AccountAssets, AccountBase, HistoricalBalance } from 'plaid';
 import React from 'react';
 import {
   CartesianGrid,
@@ -15,30 +15,31 @@ import {
 } from 'recharts';
 
 const Overview: React.FC = () => {
-  const { assets, balances }: any = useDataContext();
+  const { assets, balances } = useDataContext();
+  if (!assets || !balances) return <>loading</>;
   console.log(balances.accounts.accounts);
   const accountBalances = balances.accounts.accounts;
-  const accountHistoricalData = assets.reports.report.items[0].accounts;
+  const accountHistoricalData = assets.report.items[0].accounts;
   console.log(accountHistoricalData);
 
-  const accountBalancesData = accountBalances.map((account: AccountBase) => ({
+  const accountBalancesData = accountBalances.map((account) => ({
     name: account.name,
     value: account.balances?.current || 0,
   }));
-  const totalSavings = accountBalances.reduce((accumulator, currentValue) => {
+  const totalSavings = accountBalances.reduce((accumulator: number, currentValue: AccountBase) => {
     return accumulator + (currentValue.balances?.current || 0);
   }, 0);
-  const totalHistoricalSavings: { date: any; TotalAmount: number }[] = [];
-  const historicalBalances = accountHistoricalData.map(
-    (account: any) => account.historical_balances,
+  const totalHistoricalSavings: { date: string; TotalAmount: number }[] = [];
+  const historicalBalances: (HistoricalBalance[] | undefined)[] = accountHistoricalData.map(
+    (account: AccountAssets) => account.historical_balances,
   );
   const flattenedHistoricalBalances = historicalBalances.flat();
-  const uniqueDates = [...new Set(flattenedHistoricalBalances.map((balance) => balance.date))];
+  const uniqueDates = [...new Set(flattenedHistoricalBalances.map((balance) => balance?.date))];
   uniqueDates.forEach((date) => {
     const totalAmount = flattenedHistoricalBalances
-      .filter((balance) => balance.date === date)
-      .reduce((total, balance) => total + balance.current, 0);
-    totalHistoricalSavings.push({ date, TotalAmount: totalAmount });
+      .filter((balance) => balance !== undefined && balance.date === date)
+      .reduce((total, balance) => total + (balance?.current ?? 0), 0);
+    if (date) totalHistoricalSavings.push({ date, TotalAmount: totalAmount });
   });
   const reversedTotalHistoricalSavings = totalHistoricalSavings.reverse();
   const oldest = reversedTotalHistoricalSavings[0].TotalAmount;
@@ -90,7 +91,7 @@ const Overview: React.FC = () => {
         </Card>
       </div>
       <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-2 items-center">
-        {accountBalances.map((account: any) => (
+        {accountBalances.map((account) => (
           <Card className="flex flex-col items-center w-full lg:w-[700px] h-full p-4">
             <AccountStats
               accountName={account.name}
