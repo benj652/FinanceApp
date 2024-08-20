@@ -1,14 +1,12 @@
 import { categoryParser } from '@renderer/utils/NameParsers';
+import { Transaction } from 'plaid';
 import { useState } from 'react';
 import { MdOutlineExpandMore } from 'react-icons/md';
 import Card from '../general/Card';
-const TransactionStats = ({ transaction }) => {
+const TransactionStats = ({ transaction }: { transaction: Transaction }) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   return (
-    <Card
-      className={'w-full lg:w-[800px] flex flex-col cursor-pointer'}
-      onClick={() => setExpanded(!expanded)}
-    >
+    <Card className={'w-full flex flex-col cursor-pointer'} onClick={() => setExpanded(!expanded)}>
       <div className="flex justify-end">
         <MdOutlineExpandMore
           className={`transition-all duration-180 ease-in-out ${expanded ? 'rotate-0' : 'rotate-90'}`}

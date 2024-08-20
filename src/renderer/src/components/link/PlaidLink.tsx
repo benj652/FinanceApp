@@ -1,6 +1,7 @@
 // APP COMPONENT
 // Upon rendering of App component, make a request to create and
 // obtain a link token to be used in the Link component
+import { useTokenContext } from '@renderer/context/TokenContext';
 import React, { useEffect, useState } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
 import GeneralButton from '../general/GeneralButton';
@@ -24,9 +25,11 @@ interface LinkProps {
   linkToken: string | null;
 }
 const Link: React.FC<LinkProps> = (props: LinkProps) => {
+  const { setAccessToken } = useTokenContext();
   const onSuccess = React.useCallback((public_token) => {
     // send public_token to server
     const response = window.context.setAccessToken(public_token);
+    setAccessToken(public_token);
     console.log(response);
     // Handle response ...
     // console.log(response);

@@ -15,6 +15,7 @@ declare global {
             transactions: Array<TransactionBase>;
           }
         | undefined;
+      fetchAccessToken: Promise<string>;
     };
   }
 }

@@ -76,6 +76,7 @@ app.whenReady().then(() => {
   ipcMain.handle('checkAccountsStorage', () => checkAccountsStorage());
   ipcMain.handle('manageTransactions', () => manageTransactions(ACCESS_TOKEN));
   ipcMain.handle('checkTransactionsFile', () => checkTransactionsFile());
+  ipcMain.handle('fetchAccessToken', () => ACCESS_TOKEN);
   // const filter = {
   //   urls: ['*://sandbox.plaid.com/*'],
   // };

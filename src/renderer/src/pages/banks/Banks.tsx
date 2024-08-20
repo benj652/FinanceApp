@@ -1,13 +1,18 @@
+import NoAccountsConnected from '@renderer/components/general/NoAccountsConnected';
+import Unavalible from '@renderer/components/general/Unavalible';
 import PlaidLink from '@renderer/components/link/PlaidLink';
 import BankStats from '@renderer/components/stats/BankStats';
 import { useDataContext } from '@renderer/context/DataContext';
+import { useTokenContext } from '@renderer/context/TokenContext';
 import { AccountBase, AccountsGetResponse } from 'plaid';
 import React from 'react';
 
 const Banks: React.FC = () => {
   const { balances }: { balances: { accounts: AccountsGetResponse } | undefined } =
     useDataContext();
-  if (!balances) return <>loading</>;
+  const { accessToken } = useTokenContext();
+  if (!accessToken) return <NoAccountsConnected />;
+  if (!balances) return <Unavalible param="Balances" />;
   const accounts = balances.accounts.accounts;
   console.log(accounts);
   return (
@@ -17,7 +22,7 @@ const Banks: React.FC = () => {
           You currently are linked to the{' '}
           <span className="text-primary text-blue-700">{accounts.length}</span> following accounts:
         </p>
-        <div className="flex flex-wrap overflow-x-auto w-screen justify-center">
+        <div className="flex flex-wrap overflow-x-auto w-screen justify-center space-x-5">
           {accounts.map((account: AccountBase) => (
             <BankStats key={account.account_id} bank={account} />
           ))}

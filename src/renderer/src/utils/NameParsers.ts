@@ -1,5 +1,6 @@
-export const categoryParser = (name: string) => {
-  if (name == 'TRANSPORTATION') {
+export const categoryParser = (name: string | undefined) => {
+  if (!name) return 'Unknown';
+  else if (name == 'TRANSPORTATION') {
     return 'Transportation';
   } else if (name == 'ENTERTAINMENT') {
     return 'Entertainment';
@@ -35,8 +36,6 @@ export const categoryParser = (name: string) => {
     return 'Loans';
   } else if (name == 'CREDIT_CARD_PAYMENTS') {
     return 'Credit Card Payments';
-  } else if (name == 'ENTERTAINMENT') {
-    return 'Entertainment';
   }
-  return name;
+  return 'Other';
 };

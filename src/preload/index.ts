@@ -15,6 +15,7 @@ try {
     checkAccountsStorage: (...args) => ipcRenderer.invoke('checkAccountsStorage', ...args),
     manageTransactions: (...args) => ipcRenderer.invoke('manageTransactions', ...args),
     checkTransactionsFile: (...args) => ipcRenderer.invoke('checkTransactionsFile', ...args),
+    fetchAccessToken: ipcRenderer.invoke('fetchAccessToken'),
   });
 } catch (error) {
   console.error(error);

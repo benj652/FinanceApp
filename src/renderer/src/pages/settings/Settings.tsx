@@ -9,9 +9,7 @@ const Settings = () => {
             <div className="flex items-center space-x-5">
               <label className="text-xl font-medium text-gray-90">Auto Updates</label>
               <select id="auto-updates" name="auto-updates" defaultValue="disabled">
-                <option value="disabled" disabled>
-                  Disabled
-                </option>
+                <option value="disabled">Disabled</option>
                 <option value="enabled">Enabled</option>
               </select>
             </div>

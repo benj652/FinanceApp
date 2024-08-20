@@ -1,7 +1,10 @@
 import Card from '@renderer/components/general/Card';
 import GeneralPieChart from '@renderer/components/general/GeneralPieChart';
+import NoAccountsConnected from '@renderer/components/general/NoAccountsConnected';
+import Unavalible from '@renderer/components/general/Unavalible';
 import AccountStats from '@renderer/components/stats/AccountStats';
 import { useDataContext } from '@renderer/context/DataContext';
+import { useTokenContext } from '@renderer/context/TokenContext';
 import { AccountAssets, AccountBase, HistoricalBalance } from 'plaid';
 import React from 'react';
 import {
@@ -16,7 +19,10 @@ import {
 
 const Overview: React.FC = () => {
   const { assets, balances } = useDataContext();
-  if (!assets || !balances) return <>loading</>;
+  const { accessToken } = useTokenContext();
+  console.log(assets, balances);
+  if (!accessToken) return <NoAccountsConnected />;
+  if (!assets || !balances) return <Unavalible param="Assets and Balances" />;
   console.log(balances.accounts.accounts);
   const accountBalances = balances.accounts.accounts;
   const accountHistoricalData = assets.report.items[0].accounts;
@@ -49,24 +55,28 @@ const Overview: React.FC = () => {
   console.log(totalHistoricalSavings);
   return (
     <div className="overflow-auto ">
-      <div className="flex justify-center items-center">
-        <h1 className="text-3xl">Savings Overview:</h1>
-      </div>
-      <div className="grid grid-rows-1 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
+      <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-5 p-5">
+        <Card className="flex flex-col text-center h-min col-span-1 lg:col-span-2">
+          <p className="text-xl">Total Savings:</p>
+          <p className="text-3xl hover:font-bold">${totalSavings}</p>
+        </Card>
+        <Card className="flex flex-col text-center h-min col-span-1 lg:col-span-2">
+          <p className="text-xl">Last 30 Days:</p>
+          <p
+            className={`text-3xl hover:font-bold ${change === null ? 'text-black' : change < 0 ? 'text-red-500' : 'text-green-500'}`}
+          >
+            {change ? `(${change?.toFixed(2)}%)` : '(N/A)'}
+          </p>
+        </Card>
+        <Card className="flex flex-col text-center h-min col-span-1 lg:col-span-2">
+          <p className="text-xl">Accounts: </p>
+          <p className="text-3xl hover:font-bold">{balances.accounts.accounts.length}</p>
+        </Card>
+        <Card className="text-center col-span-3">
           <p className="text-xl text-center">Distrabution:</p>
           <GeneralPieChart categoryData={accountBalancesData} size={300} />
         </Card>
-        <Card className="flex flex-col text-center h-min">
-          <p className="text-xl">Total Savings:</p>
-          <p className="text-3xl m-10 hover:font-bold">${totalSavings}</p>
-          <h1
-            className={`text-xl ${change === null ? 'text-black' : change < 0 ? 'text-red-500' : 'text-green-500'}`}
-          >
-            Last 30 Days: {change ? `(${change?.toFixed(2)}%)` : '(N/A)'}
-          </h1>
-        </Card>
-        <Card className="text-center">
+        <Card className="text-center col-span-3">
           Total Savings History:
           <ResponsiveContainer width="100%" height={300}>
             <LineChart
@@ -89,10 +99,9 @@ const Overview: React.FC = () => {
             </LineChart>
           </ResponsiveContainer>
         </Card>
-      </div>
-      <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-2 items-center">
+        <Card className="text-center col-span-3 lg:col-span-6 "> Account Stats </Card>
         {accountBalances.map((account) => (
-          <Card className="flex flex-col items-center w-full lg:w-[700px] h-full p-4">
+          <Card key={account.account_id} className="flex flex-col col-span-3">
             <AccountStats
               accountName={account.name}
               officialName={account.official_name}

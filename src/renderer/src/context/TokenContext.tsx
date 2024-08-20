@@ -1,3 +1,30 @@
+import { createContext, ReactNode, useContext, useState } from 'react';
+
+interface TokenContextType {
+  accessToken: string | undefined;
+  setAccessToken: (token: string | undefined) => void;
+}
+
+export const TokenContext = createContext<TokenContextType>({
+  accessToken: undefined,
+  setAccessToken: () => {},
+});
+
+export const useTokenContext = () => {
+  return useContext(TokenContext);
+};
+
+// eslint-disable-next-line react/prop-types
+export const TokenContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
+
+  return (
+    <TokenContext.Provider value={{ accessToken, setAccessToken }}>
+      {children}
+    </TokenContext.Provider>
+  );
+};
+
 // import { createContext, ReactNode, useContext, useState } from 'react';
 
 // // Define the shape of the context value
